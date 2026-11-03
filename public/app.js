@@ -1,6 +1,25 @@
 const socket = io();
 let state = {code:null,member:null,adminKey:null,room:null,selectedBid:0};
 const $ = id => document.getElementById(id);
+// Populate IPL teams in the Join Auction dropdown
+const IPL_TEAMS = [
+  "Chennai Super Kings",
+  "Mumbai Indians",
+  "Royal Challengers Bengaluru",
+  "Kolkata Knight Riders",
+  "Sunrisers Hyderabad",
+  "Rajasthan Royals",
+  "Delhi Capitals",
+  "Punjab Kings",
+  "Gujarat Titans",
+  "Lucknow Super Giants"
+];
+
+$("teamPick").innerHTML =
+  '<option value="">Select your team</option>' +
+  IPL_TEAMS.map((team, index) =>
+    `<option value="t${index + 1}">${team}</option>`
+  ).join("");
 function toast(msg){const el=$("toast");el.textContent=msg;el.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.add("hidden"),3200)}
 function show(which){["home","createPanel","joinPanel","room"].forEach(id=>$(id).classList.toggle("hidden",id!==which))}
 $("showCreate").onclick=()=>show("createPanel");$("showJoin").onclick=()=>show("joinPanel");
