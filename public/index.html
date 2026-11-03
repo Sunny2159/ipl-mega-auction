@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d18"><title>IPL Mega Auction</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/"><span class="brand-mark">🏏</span> IPL <b>MEGA AUCTION</b></a><span class="live-pill">● LIVE AUCTION ROOM</span></header>
+<main>
+  <section id="home" class="hero">
+    <div class="eyebrow">BUILD YOUR DREAM SQUAD</div><h1>THE BIGGEST<br><span>AUCTION NIGHT.</span></h1>
+    <p>Create a private auction room, invite your friends and build your championship team.</p>
+    <div class="home-actions"><button class="primary" id="showCreate">CREATE AUCTION <span>↗</span></button><button class="secondary" id="showJoin">JOIN WITH CODE</button></div>
+    <div class="feature-row"><span>⚡ Live bidding</span><span>🛡️ Organiser controls</span><span>🏆 10 IPL teams</span></div>
+  </section>
+  <section id="createPanel" class="panel hidden">
+    <button class="back" data-home>← Back</button><h2>Create your auction</h2><p class="muted">You become the organiser and receive a private admin key for this room.</p>
+    <form id="createForm"><label>Your name<input name="name" required maxlength="24" placeholder="Organiser name"></label><label>Auction name<input name="title" maxlength="60" value="IPL Mega Auction"></label><label>Organiser password<input name="password" type="password" minlength="6" required placeholder="At least 6 characters"></label><label>Team purse (₹ lakh)<input name="budget" type="number" min="1000" value="12000"></label><button class="primary wide">CREATE PRIVATE LOBBY ↗</button></form>
+  </section>
+  <section id="joinPanel" class="panel hidden">
+    <button class="back" data-home>← Back</button><h2>Join an auction</h2><form id="joinForm"><label>Lobby code<input name="code" required maxlength="8" placeholder="e.g. C9CH8V" style="text-transform:uppercase"></label><label>Your display name<input name="name" required maxlength="24" placeholder="Your name"></label><label>Join as<select name="kind" id="joinKind"><option value="team">Team owner</option><option value="viewer">Viewer only</option></select></label><label id="teamPickWrap">Choose a team<select name="teamId" id="teamPick"></select></label><button class="primary wide">JOIN LOBBY ↗</button></form></section>
+  <section id="room" class="hidden">
+    <div class="room-head"><div><div class="eyebrow">PRIVATE AUCTION ROOM</div><h2 id="roomTitle">IPL Mega Auction</h2><span class="muted">Lobby code: <b id="roomCode"></b></span></div><button class="secondary" id="copyInvite">COPY INVITE LINK</button></div>
+    <div class="room-grid">
+      <div class="main-column">
+        <div class="auction-card"><div class="auction-top"><span class="live-pill" id="statusPill">WAITING</span><span id="pauseLabel" class="muted"></span></div><div class="player-stage"><div class="player-avatar">🏏</div><div><div class="eyebrow">CURRENT PLAYER</div><h2 id="playerName">Waiting for auction</h2><p id="playerMeta" class="muted">The organiser will start the auction.</p></div></div>
+          <div class="bid-strip"><div><small>CURRENT BID</small><strong id="currentBid">₹0 L</strong></div><div><small>HIGHEST BIDDER</small><strong id="highestBidder">—</strong></div><div><small>BASE PRICE</small><strong id="basePrice">—</strong></div></div>
+          <div class="bid-actions"><button class="secondary" id="decreaseBid">− ₹10L</button><button class="primary" id="placeBid">BID NOW <span id="bidAmount">₹0L</span></button><button class="secondary" id="increaseBid">+ ₹10L</button></div>
+          <p id="bidHint" class="hint">Join as a team owner to place bids. Bids increase in ₹10 lakh steps.</p>
+        </div>
+        <div class="section-card"><div class="section-head"><h3>TEAM PURSES</h3><span class="muted">₹ lakh</span></div><div id="teamsGrid" class="teams-grid"></div></div>
+        <div class="section-card"><div class="section-head"><h3>PLAYER POOL</h3><span class="muted" id="playerCount"></span></div><div id="playersList" class="players-list"></div></div>
+      </div>
+      <aside class="side-column">
+        <div class="section-card"><div class="section-head"><h3>ROOM MEMBERS</h3><span class="muted" id="memberCount"></span></div><div id="membersList" class="members-list"></div></div>
+        <div class="section-card"><div class="section-head"><h3>RECENT BIDS</h3></div><div id="bidHistory" class="history-list"><p class="muted">No bids yet.</p></div></div>
+        <div id="organiserPanel" class="section-card organiser hidden"><div class="section-head"><h3>🛡 ORGANISER CONTROL</h3><span class="admin-tag">ADMIN</span></div>
+          <div class="admin-buttons"><button class="primary" data-action="start">START AUCTION</button><button class="secondary" data-action="pause">PAUSE</button><button class="secondary" data-action="resume">RESUME</button><button class="secondary" data-action="next">SELL / NEXT PLAYER</button><button class="secondary" data-action="unsold">MARK UNSOLD</button><button class="danger" data-action="end">END AUCTION</button></div>
+          <div class="admin-sub"><h4>Participant moderation</h4><p class="muted tiny">Select a participant below to mute, kick or ban them.</p><select id="moderateMember"></select><div class="three-buttons"><button data-action="mute" class="secondary">MUTE</button><button data-action="unmute" class="secondary">UNMUTE</button><button data-action="kick" class="danger">KICK</button></div><button data-action="ban" class="danger wide">BAN FROM THIS LOBBY</button></div>
+          <div class="admin-sub"><h4>Player management</h4><input id="newPlayerName" placeholder="New player name"><div class="inline-fields"><input id="newPlayerRole" placeholder="Role" value="Player"><input id="newPlayerBase" type="number" value="20" min="10" step="10" aria-label="Base price"></div><button data-action="addPlayer" class="secondary wide">ADD PLAYER</button><select id="removePlayerSelect"></select><button data-action="removePlayer" class="danger wide">REMOVE SELECTED PLAYER</button></div>
+          <div class="admin-sub"><h4>Team budget</h4><select id="budgetTeam"></select><input id="budgetValue" type="number" placeholder="New purse in ₹ lakh"><button data-action="setBudget" class="secondary wide">UPDATE PURSE</button></div>
+          <div class="admin-sub"><h4>Danger zone</h4><button data-action="reset" class="danger wide">RESET ENTIRE AUCTION</button><p class="tiny muted">Reset clears sold players, bids and team ownership. This cannot be undone.</p></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <div id="toast" class="toast hidden"></div>
+</main>
+<footer>IPL MEGA AUCTION <span>Unofficial fan-made auction platform · Not affiliated with the IPL or BCCI</span></footer>
+<script src="/socket.io/socket.io.js"></script><script src="/app.js"></script>
+</body></html>
