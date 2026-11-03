@@ -59,7 +59,16 @@ document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>{
  emitAdmin(action,data);
  if(action==="addPlayer")$("newPlayerName").value="";
 });
-socket.on("connect",()=>{
- const pathCode=location.pathname.match(/\/lobby\/([A-Za-z0-9]+)/)?.[1];
- if(pathCode){show("joinPanel");$("joinForm").elements.code.value=pathCode.toUpperCase();}
+ socket.on("connect", () => {
+  const parts = window.location.pathname.split("/").filter(Boolean);
+
+  if (parts[0]?.toLowerCase() === "lobby" && parts[1]) {
+    show("joinPanel");
+
+    const codeInput = $("joinForm").querySelector('[name="code"]');
+
+    if (codeInput) {
+      codeInput.value = parts[1].toUpperCase();
+    }
+  }
 });

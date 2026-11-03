@@ -4,12 +4,19 @@ const { Server } = require("socket.io");
 const crypto = require("crypto");
 const path = require("path");
 
-const app = express();
+ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "public")));
+ 
 
+app.use(express.static(path.join(__dirname, "public")));
+
+// Handle shared auction lobby links
+app.get("/lobby/:code", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 const TEAM_NAMES = [
   "Chennai Super Kings", "Mumbai Indians", "Royal Challengers Bengaluru",
   "Kolkata Knight Riders", "Sunrisers Hyderabad", "Rajasthan Royals",
